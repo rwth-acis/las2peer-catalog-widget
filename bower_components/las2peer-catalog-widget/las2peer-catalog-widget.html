@@ -193,9 +193,6 @@ A simple frontend widget for the las2peer catalog service.
       ready() {
         super.ready();
         this.loadServices();
-        setTimeout(function() {
-          this.updateStyles({'--my-elem-visibility': 'block'});
-        }.bind(this), 5000);
       }
 
       loadServices(){
@@ -214,7 +211,7 @@ A simple frontend widget for the las2peer catalog service.
                   // a must be equal to b
                   return 0;
                 });
-              
+                this.updateStyles({'--my-elem-visibility': 'block'});
             }.bind(this));
       }
 
@@ -240,16 +237,11 @@ A simple frontend widget for the las2peer catalog service.
       _suc(){
         this.$.suc.open();
         this.loadServices();
-        setTimeout(function() {
-          this.updateStyles({'--my-elem-visibility': 'block'});
-        }.bind(this), 5000);
       }
 
       _err(){
         this.$.error.open();
-        setTimeout(function() {
-          this.updateStyles({'--my-elem-visibility': 'block'});
-        }.bind(this), 5000);
+        this.loadServices();
       }
 
       _calculateBackgroundColor(projectName) {
