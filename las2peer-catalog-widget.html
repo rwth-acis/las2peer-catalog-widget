@@ -1,0 +1,255 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-input/paper-textarea.html">
+<link rel="import" href="../paper-card/paper-card.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-fab/paper-fab.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icons/hardware-icons.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
+<script
+  src="https://code.jquery.com/jquery-3.1.1.js"
+  integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+  crossorigin="anonymous"></script>
+
+<!--
+`las2peer-catalog-widget`
+A simple frontend widget for the las2peer catalog service.
+
+@demo demo/index.html
+-->
+
+<dom-module id="las2peer-catalog-widget">
+  <template>
+    <iron-ajax
+        id="postService"
+        url="{{source}}/{{service}}"
+        method="POST"
+        content-type="application/json"
+        handle-as="text/plain"
+        on-response="_suc"
+        on-error="_err"
+        ></iron-ajax>
+    <style>
+      :host {
+        display: block;
+      }
+      paper-card{
+        width: 250px;
+        height: 265px;
+        display:inline-block;
+        margin: 10px;
+      }
+
+      .card-header{
+        height: 30px;
+      }
+      .service-title {
+        font-family: 'Roboto', 'Noto', sans-serif;
+        -webkit-font-smoothing: antialiased;
+
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: -.012em;
+        line-height: 24px;
+        height: 60px;
+        margin-top: -20px;
+      }
+      .service-version {
+        font-family: 'Roboto', 'Noto', sans-serif;
+        -webkit-font-smoothing: antialiased;
+
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: -.012em;
+        line-height: 24px;
+        float:right;
+        color:#666;
+        margin-right: 10px;
+        margin-top: -25px;
+      }
+      .service-description {
+        height: 90px;
+        overflow-y: hidden;
+      }
+      paper-button{
+        width: 95px;
+      }
+
+      paper-dialog{
+        width:400px;
+      }
+      a{
+        text-decoration: none;
+        color:#000;
+      }
+      #addService{
+        position: absolute;
+        right: 15px;
+        margin-top:-30px;
+      }
+
+      paper-textarea,
+      paper-input,
+      paper-input-container {
+        text-align: left;
+      }
+
+      paper-toast{
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      #error {
+        --paper-toast-background-color: #F44336;
+        --paper-toast-color: white;
+      }
+      #suc{
+        --paper-toast-background-color: #8BC34A;
+        --paper-toast-color: white;
+      }
+    </style>
+    <center>
+    <template is="dom-repeat" items="{{services}}">
+        <paper-card>
+          <div class="card-header" style="background-color: [[_calculateBackgroundColor(item.name)]];"></div>
+          <div class="card-content">
+            <div class="service-title"><p>{{item.name}}</p><div class="service-version">Ver.: {{item.version}}</div></div>
+            <div class="service-description">{{item.description}}</div>
+          </div>
+          <div class="card-actions">
+            <a target="_blank" href="{{item.github}}">
+              <paper-button><iron-icon src="../../../g.png"></iron-icon></paper-button>
+            </a>
+            <a target="_blank" href="{{item.frontend}}">
+              <paper-button><iron-icon icon="hardware:laptop-mac"></iron-icon></paper-button>
+            </a>
+          </div>
+        </paper-card>
+    </template>
+    <br>
+    <div id="addService"><paper-fab on-click="_openAddService" icon="add"></paper-fab></div>
+    <paper-dialog id="dialog">
+  <h2>Add a new service</h2>
+  <p><paper-input id="sname" label="Service Name"></paper-input>
+  <paper-input id="sversion" label="Version"></paper-input>
+  <paper-input id="sgithub" label="Github URL"></paper-input>
+  <paper-input id="sfrontend" label="Frontend URL"></paper-input>
+  <paper-textarea id="sdescription" label="Description"></paper-textarea></p>
+  <div class="buttons">
+    <paper-button dialog-dismiss>Cancel</paper-button>
+    <paper-button dialog-confirm autofocus on-click="_submitService">Add</paper-button>
+  </div>
+</paper-dialog>
+<paper-toast id="suc" class="fit-bottom" text="Service added!"></paper-toast>
+<paper-toast id="error" class="fit-bottom" text="An error occured!"></paper-toast>
+    <br>
+  </template>
+  </center>
+  <script>
+    // thanks to http://stackoverflow.com/posts/16533568/
+    function djb2(str) {
+      var hash = 5381;
+      for (var i = 0; i < str.length; i++) {
+        hash = ((hash << 5) + hash) + str.charCodeAt(i); /* hash * 33 + c */
+      }
+      return hash;
+    }
+    function hashStringToColor(str) {
+      var hash = djb2(str);
+      var r = (hash & 0xFF0000) >> 16;
+      var g = (hash & 0x00FF00) >> 8;
+      var b = hash & 0x0000FF;
+      return "#" + ("0" + r.toString(16)).substr(-2) + ("0" + g.toString(16)).substr(-2) + ("0" + b.toString(16)).substr(-2);
+    }
+  </script>
+  <script>
+    class MyElement extends Polymer.Element {
+      static get is() { return 'las2peer-catalog-widget'; }
+      static get properties() {
+        return {
+          services: {
+            type: Object,
+          },
+          arr: {
+            type: Object,
+          },
+          source:{
+            type: String,
+            value: "http://localhost/test.json"
+          },
+          service:{
+            type: String,
+            value: "las2peer"
+          }
+        };
+      }
+      ready() {
+        super.ready();
+        this.loadServices();
+      }
+
+      loadServices(){
+        this.services = [];
+        $.get(this.source, function(data) {
+            this.services = data;
+            this.services.sort(function compare(a, b) {
+                var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+                var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+                if (nameA<nameB) {
+                  return -1;
+                }
+                if (nameA>nameB) {
+                  return 1;
+                }
+                  // a must be equal to b
+                  return 0;
+                });
+              
+            }.bind(this));
+      }
+
+      _openAddService(){
+        this.$.dialog.open();
+      }
+      _submitService(){
+        var serviceName = this.$.sname.value;
+        var serviceVersion = this.$.sversion.value;
+        var seriveGithub = this.$.sgithub.value;
+        var serviceFrontend = this.$.sfrontend.value;
+        var serviceDescription = this.$.sdescription.value;
+        if(typeof serviceName !== "undefined" && typeof serviceVersion !== "undefined" &&serviceName.length>3&&serviceVersion.length>0){
+          this.service = serviceName;
+          this.$.postService.body = '{ "name": "'+serviceName+'", "version": "'+serviceVersion+'", "github": "'+seriveGithub+'", "frontend": "'+serviceFrontend+'", "description": "'+serviceDescription+'" }';
+          console.log(this.$.postService.body);
+          this.$.postService.generateRequest();
+        }else{
+          this.$.error.open();
+        }
+      }
+
+      _suc(){
+        this.$.suc.open();
+      }
+
+      _err(){
+        this.$.error.open();
+      }
+
+      _calculateBackgroundColor(projectName) {
+        if(typeof projectName =="string"){
+          return hashStringToColor(projectName);
+        }else{
+          return hashStringToColor("undefined");
+        }
+        
+      }
+    }
+
+    window.customElements.define(MyElement.is, MyElement);
+
+  </script>
+</dom-module>
