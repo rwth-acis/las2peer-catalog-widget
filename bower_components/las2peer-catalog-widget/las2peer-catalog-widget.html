@@ -34,7 +34,7 @@ A simple frontend widget for the las2peer catalog service.
         on-error="_err"
         ></iron-ajax>
     <style>
-      :host > * {
+      :host {
         display: block;
         --my-elem-display: none;
       }
@@ -92,7 +92,7 @@ A simple frontend widget for the las2peer catalog service.
         position: absolute;
         right: 15px;
         margin-top:-30px;
-        display: var(--my-elem-visibility);
+        display: var(--my-elem-visibility,none);
       }
 
       paper-textarea,
