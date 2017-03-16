@@ -56,7 +56,7 @@ A simple frontend widget for the las2peer catalog service.
         font-weight: 500;
         letter-spacing: -.012em;
         line-height: 24px;
-        height: 60px;
+        height: 70px;
         margin-top: -20px;
       }
       .service-version {
@@ -193,7 +193,7 @@ A simple frontend widget for the las2peer catalog service.
       ready() {
         super.ready();
         this.loadServices();
-        this.updateStyles({'--my-elem-visibility': 'block'});
+        this.async(function() {this.updateStyles({'--my-elem-visibility': 'block'});}, 1500);
       }
 
       loadServices(){
