@@ -91,6 +91,7 @@ A simple frontend widget for the las2peer catalog service.
         position: absolute;
         right: 15px;
         margin-top:-30px;
+        display: none;
       }
 
       paper-textarea,
@@ -225,6 +226,7 @@ A simple frontend widget for the las2peer catalog service.
         if(typeof serviceName !== "undefined" && typeof serviceVersion !== "undefined" &&serviceName.length>3&&serviceVersion.length>0){
           this.service = serviceName;
           this.$.postService.body = '{ "name": "'+serviceName+'", "version": "'+serviceVersion+'", "github": "'+seriveGithub+'", "frontend": "'+serviceFrontend+'", "description": "'+serviceDescription+'" }';
+          $("#addService").hide();
           this.$.postService.generateRequest();
         }else{
           this.$.error.open();
@@ -234,11 +236,12 @@ A simple frontend widget for the las2peer catalog service.
       _suc(){
         this.$.suc.open();
         this.loadServices();
-        $('#addService').load(document.URL +  ' #addService');
+        $("#addService").show();
       }
 
       _err(){
         this.$.error.open();
+        $("#addService").show();
       }
 
       _calculateBackgroundColor(projectName) {
