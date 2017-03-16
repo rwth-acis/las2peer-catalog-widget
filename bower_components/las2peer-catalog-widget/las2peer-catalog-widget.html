@@ -133,7 +133,7 @@ A simple frontend widget for the las2peer catalog service.
         </paper-card>
     </template>
     <br><br><br>
-    <paper-fab id="addService" on-click="_openAddService" icon="add"></paper-fab>
+    <div id="addService"><paper-fab on-click="_openAddService" icon="add"></paper-fab></div>
     <paper-dialog id="dialog">
   <h2>Add a new service</h2>
   <p><paper-input id="sname" label="Service Name"></paper-input>
@@ -192,7 +192,7 @@ A simple frontend widget for the las2peer catalog service.
       ready() {
         super.ready();
         this.loadServices();
-        this.$.addService.css("display", "block");
+        this.$("#addService").css("display", "block");
       }
 
       loadServices(){
