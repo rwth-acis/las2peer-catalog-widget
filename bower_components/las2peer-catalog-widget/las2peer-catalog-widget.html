@@ -193,7 +193,9 @@ A simple frontend widget for the las2peer catalog service.
       ready() {
         super.ready();
         this.loadServices();
-        this.setTimeout(function() {this.updateStyles({'--my-elem-visibility': 'block'});}, 1500);
+        setTimeout(function() {
+          this.updateStyles({'--my-elem-visibility': 'block'});
+        }.bind(this), 1500);
       }
 
       loadServices(){
