@@ -36,10 +36,11 @@ A simple frontend widget for the las2peer catalog service.
     <style>
       :host {
         display: block;
+        --my-elem-display: none;
       }
       paper-card{
         width: 250px;
-        height: 265px;
+        height: 275px;
         display:inline-block;
         margin: 10px;
       }
@@ -55,7 +56,7 @@ A simple frontend widget for the las2peer catalog service.
         font-weight: 500;
         letter-spacing: -.012em;
         line-height: 24px;
-        height: 60px;
+        height: 70px;
         margin-top: -20px;
       }
       .service-version {
@@ -73,6 +74,7 @@ A simple frontend widget for the las2peer catalog service.
       }
       .service-description {
         height: 90px;
+        width: 220px;
         overflow-y: hidden;
       }
       paper-button{
@@ -90,6 +92,7 @@ A simple frontend widget for the las2peer catalog service.
         position: absolute;
         right: 15px;
         margin-top:-30px;
+        display: var(--my-elem-visibility,none);
       }
 
       paper-textarea,
@@ -122,7 +125,7 @@ A simple frontend widget for the las2peer catalog service.
           </div>
           <div class="card-actions">
             <a target="_blank" href="{{item.github}}">
-              <paper-button><iron-icon src="g.png"></iron-icon></paper-button>
+              <paper-button><iron-icon src="https://rwth-acis.github.io/las2peer-catalog-widget/g.png"></iron-icon></paper-button>
             </a>
             <a target="_blank" href="{{item.frontend}}">
               <paper-button><iron-icon icon="hardware:laptop-mac"></iron-icon></paper-button>
@@ -130,7 +133,7 @@ A simple frontend widget for the las2peer catalog service.
           </div>
         </paper-card>
     </template>
-    <br>
+    <br><br><br>
     <div id="addService"><paper-fab on-click="_openAddService" icon="add"></paper-fab></div>
     <paper-dialog id="dialog">
   <h2>Add a new service</h2>
@@ -208,7 +211,7 @@ A simple frontend widget for the las2peer catalog service.
                   // a must be equal to b
                   return 0;
                 });
-              
+                this.updateStyles({'--my-elem-visibility': 'block'});
             }.bind(this));
       }
 
@@ -224,7 +227,7 @@ A simple frontend widget for the las2peer catalog service.
         if(typeof serviceName !== "undefined" && typeof serviceVersion !== "undefined" &&serviceName.length>3&&serviceVersion.length>0){
           this.service = serviceName;
           this.$.postService.body = '{ "name": "'+serviceName+'", "version": "'+serviceVersion+'", "github": "'+seriveGithub+'", "frontend": "'+serviceFrontend+'", "description": "'+serviceDescription+'" }';
-          console.log(this.$.postService.body);
+          this.updateStyles({'--my-elem-visibility': 'none'});
           this.$.postService.generateRequest();
         }else{
           this.$.error.open();
@@ -233,10 +236,12 @@ A simple frontend widget for the las2peer catalog service.
 
       _suc(){
         this.$.suc.open();
+        this.loadServices();
       }
 
       _err(){
         this.$.error.open();
+        this.loadServices();
       }
 
       _calculateBackgroundColor(projectName) {
