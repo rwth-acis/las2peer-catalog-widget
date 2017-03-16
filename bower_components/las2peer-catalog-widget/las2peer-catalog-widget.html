@@ -233,6 +233,7 @@ A simple frontend widget for the las2peer catalog service.
       _suc(){
         this.$.suc.open();
         this.loadServices();
+        $('#addService').load(document.URL +  ' #addService');
       }
 
       _err(){
