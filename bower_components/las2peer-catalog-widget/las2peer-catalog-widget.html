@@ -36,6 +36,7 @@ A simple frontend widget for the las2peer catalog service.
     <style>
       :host {
         display: block;
+        --my-elem-display: none;
       }
       paper-card{
         width: 250px;
@@ -91,7 +92,7 @@ A simple frontend widget for the las2peer catalog service.
         position: absolute;
         right: 15px;
         margin-top:-30px;
-        display: none;
+        display: var(--my-elem-visibility);
       }
 
       paper-textarea,
@@ -192,7 +193,8 @@ A simple frontend widget for the las2peer catalog service.
       ready() {
         super.ready();
         this.loadServices();
-        this.$.addService.css("display", "block");
+        this.customStyle['--my-elem-visibility'] = 'block';
+        this.updateStyles();
       }
 
       loadServices(){
@@ -227,7 +229,8 @@ A simple frontend widget for the las2peer catalog service.
         if(typeof serviceName !== "undefined" && typeof serviceVersion !== "undefined" &&serviceName.length>3&&serviceVersion.length>0){
           this.service = serviceName;
           this.$.postService.body = '{ "name": "'+serviceName+'", "version": "'+serviceVersion+'", "github": "'+seriveGithub+'", "frontend": "'+serviceFrontend+'", "description": "'+serviceDescription+'" }';
-          this.$.addService.hide();
+          this.customStyle['--my-elem-visibility'] = 'none';
+          this.updateStyles();
           this.$.postService.generateRequest();
         }else{
           this.$.error.open();
@@ -237,12 +240,14 @@ A simple frontend widget for the las2peer catalog service.
       _suc(){
         this.$.suc.open();
         this.loadServices();
-        this.$.addService.show();
+        this.customStyle['--my-elem-visibility'] = 'block';
+        this.updateStyles();
       }
 
       _err(){
         this.$.error.open();
-        this.$.addService.show();
+        this.customStyle['--my-elem-visibility'] = 'block';
+        this.updateStyles();
       }
 
       _calculateBackgroundColor(projectName) {
