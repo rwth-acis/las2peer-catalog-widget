@@ -192,6 +192,7 @@ A simple frontend widget for the las2peer catalog service.
       ready() {
         super.ready();
         this.loadServices();
+        this.$("#addService").show();
       }
 
       loadServices(){
@@ -236,12 +237,12 @@ A simple frontend widget for the las2peer catalog service.
       _suc(){
         this.$.suc.open();
         this.loadServices();
-        $("#addService").show();
+        this.$("#addService").show();
       }
 
       _err(){
         this.$.error.open();
-        $("#addService").show();
+        this.$("#addService").show();
       }
 
       _calculateBackgroundColor(projectName) {
