@@ -70,7 +70,6 @@ A simple frontend widget for the las2peer catalog service.
         float:right;
         color:#666;
         margin-right: 10px;
-        margin-top: -25px;
       }
       .service-description {
         height: 90px;
@@ -120,7 +119,7 @@ A simple frontend widget for the las2peer catalog service.
         <paper-card>
           <div class="card-header" id="{{item.name}}"></div>
           <div class="card-content">
-            <div class="service-title"><p>{{item.name}}</p><div class="service-version">Ver.: {{item.version}}</div></div>
+            <div class="service-title"><div>{{item.name}}</div><div class="service-version">Ver.: {{item.version}}</div></div>
             <div class="service-description">{{item.description}}</div>
           </div>
           <div class="card-actions">
