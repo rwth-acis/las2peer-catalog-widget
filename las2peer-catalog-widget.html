@@ -118,7 +118,7 @@ A simple frontend widget for the las2peer catalog service.
     <center>
     <template is="dom-repeat" items="{{services}}">
         <paper-card>
-          <div class="card-header" style="background-color: [[_calculateBackgroundColor(item.name)]];"></div>
+          <div class="card-header" id="{{item.name}}"></div>
           <div class="card-content">
             <div class="service-title"><p>{{item.name}}</p><div class="service-version">Ver.: {{item.version}}</div></div>
             <div class="service-description">{{item.description}}</div>
@@ -199,6 +199,12 @@ A simple frontend widget for the las2peer catalog service.
         this.services = [];
         $.get(this.source, function(data) {
             this.services = data;
+            $.each(this.services,function(index) {
+              var item = this.get(['services', index]);
+              var customStyle = document.createElement('style', 'custom-style');
+              customStyle.textContent = '#'+item.name+' {background-color: '+this._calculateBackgroundColor(item.name)+';}';
+              Polymer.dom(this.root).appendChild(customStyle);
+            }.bind(this));
             this.services.sort(function compare(a, b) {
                 var nameA = a.name.toUpperCase(); // ignore upper and lowercase
                 var nameB = b.name.toUpperCase(); // ignore upper and lowercase
