@@ -69,7 +69,6 @@ A simple frontend widget for the las2peer catalog service.
         float:right;
         color:#666;
         margin-right: 10px;
-        margin-top: -25px;
       }
       .service-description {
         height: 90px;
@@ -94,6 +93,9 @@ A simple frontend widget for the las2peer catalog service.
         display: var(--my-elem-visibility,none);
       }
 
+      .paper-dialog-content{
+        padding:0px 24px 24px 24px;
+      }
       paper-textarea,
       paper-input,
       paper-input-container {
@@ -135,12 +137,14 @@ A simple frontend widget for the las2peer catalog service.
     <br><br><br>
     <div id="addService"><paper-fab on-click="_openAddService" icon="add"></paper-fab></div>
     <paper-dialog id="dialog">
-  <h2>Add a new service</h2>
-  <p><paper-input id="sname" label="Service Name"></paper-input>
-  <paper-input id="sversion" label="Version"></paper-input>
-  <paper-input id="sgithub" label="Github URL"></paper-input>
-  <paper-input id="sfrontend" label="Frontend URL"></paper-input>
-  <paper-textarea id="sdescription" label="Description"></paper-textarea></p>
+    <div class="paper-dialog-content">
+      <h2>Add a new service</h2>
+      <paper-input id="sname" label="Service Name"></paper-input>
+      <paper-input id="sversion" label="Version"></paper-input>
+      <paper-input id="sgithub" label="Github URL"></paper-input>
+      <paper-input id="sfrontend" label="Frontend URL"></paper-input>
+      <paper-textarea id="sdescription" label="Description"></paper-textarea>
+    </div>
   <div class="buttons">
     <paper-button dialog-dismiss>Cancel</paper-button>
     <paper-button dialog-confirm autofocus on-click="_submitService">Add</paper-button>
