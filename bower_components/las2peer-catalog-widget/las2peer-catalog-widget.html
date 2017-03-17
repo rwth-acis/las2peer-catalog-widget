@@ -93,6 +93,9 @@ A simple frontend widget for the las2peer catalog service.
         display: var(--my-elem-visibility,none);
       }
 
+      #paper-dialog-content{
+        padding:0px 15px 15px 15px;
+      }
       paper-textarea,
       paper-input,
       paper-input-container {
@@ -134,7 +137,7 @@ A simple frontend widget for the las2peer catalog service.
     <br><br><br>
     <div id="addService"><paper-fab on-click="_openAddService" icon="add"></paper-fab></div>
     <paper-dialog id="dialog">
-    <div style="padding:15px;">
+    <div class="paper-dialg-content">
       <h2>Add a new service</h2>
       <paper-input id="sname" label="Service Name"></paper-input>
       <paper-input id="sversion" label="Version"></paper-input>
