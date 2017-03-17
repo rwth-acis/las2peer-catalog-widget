@@ -57,7 +57,6 @@ A simple frontend widget for the las2peer catalog service.
         letter-spacing: -.012em;
         line-height: 24px;
         height: 70px;
-        margin-top: -20px;
       }
       .service-version {
         font-family: 'Roboto', 'Noto', sans-serif;
@@ -120,7 +119,7 @@ A simple frontend widget for the las2peer catalog service.
         <paper-card>
           <div class="card-header" id="{{item.name}}"></div>
           <div class="card-content">
-            <div class="service-title"><p>{{item.name}}</p><div class="service-version">Ver.: {{item.version}}</div></div>
+            <div class="service-title"><div>{{item.name}}</div><div class="service-version">Ver.: {{item.version}}</div></div>
             <div class="service-description">{{item.description}}</div>
           </div>
           <div class="card-actions">
