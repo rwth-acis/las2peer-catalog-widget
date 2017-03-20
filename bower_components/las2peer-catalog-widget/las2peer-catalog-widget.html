@@ -204,10 +204,11 @@ A simple frontend widget for the las2peer catalog service.
       }
 
       loadServices(data){
-        console.log(data);
         this.services = [];
-        this.services = data;
+        this.services = data.detail.response;
+        console.log(this.services);
         for (var s in this.services) {
+          console.log(s);
           var item = this.get(['services', index]);
           var customStyle = document.createElement('style', 'custom-style');
           customStyle.textContent = '#'+item.name+' {background-color: '+this._calculateBackgroundColor(item.name)+';}';
