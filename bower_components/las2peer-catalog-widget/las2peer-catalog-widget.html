@@ -206,10 +206,8 @@ A simple frontend widget for the las2peer catalog service.
       loadServices(data){
         this.services = [];
         this.services = data.detail.response;
-        console.log(this.services);
-        for (var s in this.services) {
-          console.log(s);
-          var item = this.get(['services', index]);
+        for (var i in this.services) {
+          var item = this.get(['services', i]);
           var customStyle = document.createElement('style', 'custom-style');
           customStyle.textContent = '#'+item.name+' {background-color: '+this._calculateBackgroundColor(item.name)+';}';
           Polymer.dom(this.root).appendChild(customStyle);
