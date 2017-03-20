@@ -205,7 +205,8 @@ A simple frontend widget for the las2peer catalog service.
 
       loadServices(data){
         this.services = [];
-        this.services = data.detail.request.xhr.response;
+        console.log(data);
+        this.services = data.detail.response;
         console.log(this.services);
         for (var i in this.services) {
           var item = this.get(['services', i]);
