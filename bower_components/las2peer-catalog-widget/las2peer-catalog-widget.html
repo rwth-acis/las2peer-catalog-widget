@@ -21,6 +21,15 @@ A simple frontend widget for the las2peer catalog service.
 <dom-module id="las2peer-catalog-widget">
   <template>
     <iron-ajax
+        id="getServices"
+        url="{{source}}"
+        method="GET"
+        content-type="application/json"
+        handle-as="application/json"
+        on-response="loadServices"
+        on-error="_err"
+        ></iron-ajax>
+    <iron-ajax
         id="postService"
         url="{{source}}/{{service}}"
         method="POST"
@@ -191,33 +200,32 @@ A simple frontend widget for the las2peer catalog service.
       }
       ready() {
         super.ready();
-        this.loadServices();
+        this.$.getServices.generateRequest();
       }
 
-      loadServices(){
+      loadServices(data){
+        console.log(data);
         this.services = [];
-        $.get(this.source, function(data) {
-            this.services = data;
-            $.each(this.services,function(index) {
-              var item = this.get(['services', index]);
-              var customStyle = document.createElement('style', 'custom-style');
-              customStyle.textContent = '#'+item.name+' {background-color: '+this._calculateBackgroundColor(item.name)+';}';
-              Polymer.dom(this.root).appendChild(customStyle);
-            }.bind(this));
-            this.services.sort(function compare(a, b) {
-                var nameA = a.name.toUpperCase(); // ignore upper and lowercase
-                var nameB = b.name.toUpperCase(); // ignore upper and lowercase
-                if (nameA<nameB) {
-                  return -1;
-                }
-                if (nameA>nameB) {
-                  return 1;
-                }
-                  // a must be equal to b
-                  return 0;
-                });
-                this.updateStyles({'--my-elem-visibility': 'block'});
-            }.bind(this));
+        this.services = data;
+        $for (var service in this.services) {
+          var item = this.get(['services', index]);
+          var customStyle = document.createElement('style', 'custom-style');
+          customStyle.textContent = '#'+item.name+' {background-color: '+this._calculateBackgroundColor(item.name)+';}';
+          Polymer.dom(this.root).appendChild(customStyle);
+        }
+        this.services.sort(function compare(a, b) {
+          var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+          var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+          if (nameA<nameB) {
+            return -1;
+          }
+          if (nameA>nameB) {
+            return 1;
+          }
+          // a must be equal to b
+          return 0;
+        });
+            this.updateStyles({'--my-elem-visibility': 'block'});
       }
 
       _openAddService(){
