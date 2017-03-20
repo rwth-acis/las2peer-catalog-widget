@@ -207,7 +207,7 @@ A simple frontend widget for the las2peer catalog service.
         console.log(data);
         this.services = [];
         this.services = data;
-        $for (var service in this.services) {
+        $for (var s in this.services) {
           var item = this.get(['services', index]);
           var customStyle = document.createElement('style', 'custom-style');
           customStyle.textContent = '#'+item.name+' {background-color: '+this._calculateBackgroundColor(item.name)+';}';
