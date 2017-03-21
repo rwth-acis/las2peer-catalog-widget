@@ -10,10 +10,6 @@
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-icons/hardware-icons.html">
 <link rel="import" href="../paper-toast/paper-toast.html">
-<script
-  src="https://code.jquery.com/jquery-3.1.1.js"
-  integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
-  crossorigin="anonymous"></script>
 
 <!--
 `las2peer-catalog-widget`
@@ -25,13 +21,22 @@ A simple frontend widget for the las2peer catalog service.
 <dom-module id="las2peer-catalog-widget">
   <template>
     <iron-ajax
+        id="getServices"
+        url="{{source}}"
+        method="GET"
+        content-type="application/json"
+        handle-as="json"
+        on-response="loadServices"
+        on-error="_getErr"
+        ></iron-ajax>
+    <iron-ajax
         id="postService"
         url="{{source}}/{{service}}"
         method="POST"
         content-type="application/json"
         handle-as="text/plain"
         on-response="_suc"
-        on-error="_err"
+        on-error="_sendErr"
         ></iron-ajax>
     <style>
       :host {
@@ -195,33 +200,31 @@ A simple frontend widget for the las2peer catalog service.
       }
       ready() {
         super.ready();
-        this.loadServices();
+        this.$.getServices.generateRequest();
       }
 
-      loadServices(){
+      loadServices(data){
         this.services = [];
-        $.get(this.source, function(data) {
-            this.services = data;
-            $.each(this.services,function(index) {
-              var item = this.get(['services', index]);
-              var customStyle = document.createElement('style', 'custom-style');
-              customStyle.textContent = '#'+item.name+' {background-color: '+this._calculateBackgroundColor(item.name)+';}';
-              Polymer.dom(this.root).appendChild(customStyle);
-            }.bind(this));
-            this.services.sort(function compare(a, b) {
-                var nameA = a.name.toUpperCase(); // ignore upper and lowercase
-                var nameB = b.name.toUpperCase(); // ignore upper and lowercase
-                if (nameA<nameB) {
-                  return -1;
-                }
-                if (nameA>nameB) {
-                  return 1;
-                }
-                  // a must be equal to b
-                  return 0;
-                });
-                this.updateStyles({'--my-elem-visibility': 'block'});
-            }.bind(this));
+        this.services = data.detail.response;
+        for (var i in this.services) {
+          var item = this.get(['services', i]);
+          var customStyle = document.createElement('style', 'custom-style');
+          customStyle.textContent = '#'+item.name+' {background-color: '+this._calculateBackgroundColor(item.name)+';}';
+          Polymer.dom(this.root).appendChild(customStyle);
+        }
+        this.services.sort(function compare(a, b) {
+          var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+          var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+          if (nameA<nameB) {
+            return -1;
+          }
+          if (nameA>nameB) {
+            return 1;
+          }
+          // a must be equal to b
+          return 0;
+        });
+            this.updateStyles({'--my-elem-visibility': 'block'});
       }
 
       _openAddService(){
@@ -245,12 +248,16 @@ A simple frontend widget for the las2peer catalog service.
 
       _suc(){
         this.$.suc.open();
-        this.loadServices();
+        this.$.getServices.generateRequest();
       }
 
-      _err(){
+      _getErr(){
         this.$.error.open();
-        this.loadServices();
+      }
+
+      _sendErr(){
+        this.$.error.open();
+        this.$.getServices.generateRequest();
       }
 
       _calculateBackgroundColor(projectName) {
