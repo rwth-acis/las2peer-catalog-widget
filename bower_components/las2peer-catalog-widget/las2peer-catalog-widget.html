@@ -262,7 +262,7 @@ A simple frontend widget for the las2peer catalog service.
 
       _calculateBackgroundColor(projectName) {
         if(typeof projectName =="string"){
-          return hashStringToColor(projectName.replace(/\s/g, '').toLowerCase());
+          return hashStringToColor(projectName.replace(/ /g, '').toLowerCase());
         }else{
           return hashStringToColor("undefined");
         }
